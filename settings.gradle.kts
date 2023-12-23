@@ -1,1 +1,1 @@
-rootProject.name = "brackets"
+rootProject.name = "brackets-excel"

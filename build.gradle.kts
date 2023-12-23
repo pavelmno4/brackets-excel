@@ -1,11 +1,10 @@
 val kotlin_version = "1.9.21"
-val ktor_version = "2.3.7"
+val kodein_version = "7.19.0"
 val logback_version = "1.4.11"
 
 plugins {
     kotlin("jvm") version "1.9.21"
-    id("io.ktor.plugin") version "2.3.4"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.21"
+    application
 }
 
 group = "ru.pkozlov"
@@ -16,17 +15,11 @@ repositories {
 }
 
 dependencies {
-    /** Ktor */
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-partial-content:$ktor_version")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
+    /** DI */
+    implementation("org.kodein.di:kodein-di-jvm:$kodein_version")
 
     /** Logging */
     implementation("ch.qos.logback:logback-classic:$logback_version")
-
-    /** Test */
-    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
 }
 
 java {
@@ -36,15 +29,7 @@ java {
 }
 
 application {
-    mainClass.set("ru.pkozlov.brackets.AppKt")
-}
-
-ktor {
-    docker {
-        jreVersion.set(JavaVersion.VERSION_17)
-        localImageName.set("brackets")
-        imageTag.set("1.0")
-    }
+    mainClass.set("ru.pkozlov.brackets.excel.AppKt")
 }
 
 tasks.named<Test>("test") {

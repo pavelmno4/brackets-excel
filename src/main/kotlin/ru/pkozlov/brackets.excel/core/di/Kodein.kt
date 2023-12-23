@@ -1,4 +1,4 @@
-package ru.pkozlov.brackets.excel.di
+package ru.pkozlov.brackets.excel.core.di
 
 import org.kodein.di.DI
 

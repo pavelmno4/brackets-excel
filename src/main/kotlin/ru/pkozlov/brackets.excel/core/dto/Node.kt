@@ -1,5 +1,7 @@
 package ru.pkozlov.brackets.excel.core.dto
 
+import java.util.*
+
 data class Node(
     val level: Level,
     val left: Node? = null,
@@ -14,11 +16,26 @@ data class Node(
         FOUR(value = 4),
         FIVE(value = 5);
 
+        fun next(): Level = Companion.valueOf(value + 1)
+        fun previous(): Level = Companion.valueOf(value - 1)
+
         companion object Companion {
             fun valueOf(integer: Int): Level =
-                entries.firstOrNull { it.value == integer } ?: throw IllegalArgumentException()
+                if (integer <= 0) ZERO
+                else entries.firstOrNull { it.value == integer } ?: throw IllegalArgumentException()
 
-            val comporator: Comparator<Level> = compareBy(Level::value).reversed()
+            val comporator: Comparator<Level> = compareBy(Level::value)
         }
+    }
+
+    fun <K, M : MutableMap<K, Queue<Node>>> flat(destination: M, keySelector: (Node) -> K): M {
+        val key = keySelector(this)
+        val list = destination.getOrPut(key) { LinkedList() }
+        list.add(this)
+
+        left?.flat(destination, keySelector)
+        right?.flat(destination, keySelector)
+
+        return destination
     }
 }

@@ -15,13 +15,26 @@ class BracketGenerationService {
         val bracketSize: Int = defineBracketSize(participants.size)
         val preLastLevelCapacity: Int = bracketSize - participants.size
 
+        val graph: Node = createBracket(bracketSize)
+
+        when (participants.size) {
+            3 -> fillCircleGrid(graph, participants)
+            else -> fillOlimpicGrid(graph, preLastLevelCapacity, participants)
+        }
+
+        return graph
+    }
+
+    private fun fillOlimpicGrid(
+        graph: Node,
+        preLastLevelCapacity: Int,
+        participants: Collection<ParticipantDto>
+    ) {
         val teams: Queue<Queue<ParticipantDto>> =
             participants
                 .groupQueueBy { it.team }.values
                 .sortedByDescending { it.size }
                 .toQueue()
-
-        val graph: Node = createBracket(bracketSize)
 
         val flatGraph: TreeMap<Level, Queue<Node>> =
             graph.flat(TreeMap<Level, Queue<Node>>(Level.comporator)) { it.level }
@@ -30,8 +43,25 @@ class BracketGenerationService {
 
         processPreLastLevel(preLastLevelCapacity, preLastLevel, teams)
         processLastLevel(preLastLevel, teams)
+    }
 
-        return graph
+    private fun fillCircleGrid(
+        graph: Node,
+        participants: Collection<ParticipantDto>
+    ) {
+        val flatGraph: TreeMap<Level, Queue<Node>> =
+            graph.flat(TreeMap<Level, Queue<Node>>(Level.comporator)) { it.level }
+
+        val lastLevel: Queue<Node> = flatGraph.lastEntry().value
+        val participantsQueue: Queue<ParticipantDto> = participants.toQueue()
+
+        repeat(6) {
+            lastLevel.poll().apply {
+                val part: ParticipantDto = participantsQueue.poll()
+                participant = part
+                participantsQueue.add(part)
+            }
+        }
     }
 
     private fun processPreLastLevel(
@@ -59,7 +89,7 @@ class BracketGenerationService {
     private fun defineBracketSize(participantsSize: Int): Int =
         when {
             participantsSize <= 2 -> 2
-            participantsSize == 3 -> 3
+            participantsSize == 3 -> 8
             participantsSize <= 4 -> 4
             participantsSize <= 8 -> 8
             participantsSize <= 16 -> 16

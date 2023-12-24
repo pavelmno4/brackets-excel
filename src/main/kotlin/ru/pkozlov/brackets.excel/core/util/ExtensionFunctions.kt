@@ -15,7 +15,7 @@ inline fun <T, K, M : MutableMap<in K, Queue<T>>> Iterable<T>.groupQueueByTo(des
     return destination
 }
 
-fun <T> List<T>.toQueue(): Queue<T> = LinkedList(this)
+fun <T> Collection<T>.toQueue(): Queue<T> = LinkedList(this)
 
 fun <T> Queue<Queue<T>>.pollAndAddLast(): T {
     val queue: Queue<T> = poll()

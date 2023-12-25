@@ -28,7 +28,7 @@ data class Node(
         }
     }
 
-    fun <K, M : MutableMap<K, Queue<Node>>> flat(destination: M, keySelector: (Node) -> K): M {
+    fun <K, M : MutableMap<K, LinkedList<Node>>> flat(destination: M, keySelector: (Node) -> K): M {
         val key = keySelector(this)
         val list = destination.getOrPut(key) { LinkedList() }
         list.add(this)

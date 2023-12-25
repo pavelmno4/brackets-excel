@@ -36,8 +36,8 @@ class BracketGenerationService {
                 .sortedByDescending { it.size }
                 .toQueue()
 
-        val flatGraph: TreeMap<Level, Queue<Node>> =
-            graph.flat(TreeMap<Level, Queue<Node>>(Level.comporator)) { it.level }
+        val flatGraph: TreeMap<Level, LinkedList<Node>> =
+            graph.flat(TreeMap<Level, LinkedList<Node>>(Level.comporator)) { it.level }
 
         val preLastLevel: Queue<Node> = flatGraph.run { get(lastKey().previous()) ?: LinkedList() }
 
@@ -49,8 +49,8 @@ class BracketGenerationService {
         graph: Node,
         participants: Collection<ParticipantDto>
     ) {
-        val flatGraph: TreeMap<Level, Queue<Node>> =
-            graph.flat(TreeMap<Level, Queue<Node>>(Level.comporator)) { it.level }
+        val flatGraph: TreeMap<Level, LinkedList<Node>> =
+            graph.flat(TreeMap<Level, LinkedList<Node>>(Level.comporator)) { it.level }
 
         val lastLevel: Queue<Node> = flatGraph.lastEntry().value
         val participantsQueue: Queue<ParticipantDto> = participants.toQueue()

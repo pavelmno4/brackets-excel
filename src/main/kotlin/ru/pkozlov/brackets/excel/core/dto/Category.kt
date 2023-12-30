@@ -1,4 +1,4 @@
-package ru.pkozlov.brackets.excel.core.dictionary
+package ru.pkozlov.brackets.excel.core.dto
 
 import java.time.Year
 

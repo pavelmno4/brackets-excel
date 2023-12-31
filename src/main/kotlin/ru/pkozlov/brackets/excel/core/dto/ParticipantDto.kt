@@ -9,5 +9,5 @@ data class ParticipantDto(
     val birthDate: LocalDate,
     val weight: BigDecimal,
     val category: Category,
-    val team: Team
+    val team: String
 )

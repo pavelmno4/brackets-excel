@@ -9,7 +9,7 @@ inline fun <T, K> Iterable<T>.groupQueueBy(keySelector: (T) -> K): Map<K, Queue<
 inline fun <T, K, M : MutableMap<in K, Queue<T>>> Iterable<T>.groupQueueByTo(destination: M, keySelector: (T) -> K): M {
     for (element in this) {
         val key = keySelector(element)
-        val list = destination.getOrPut(key) { LinkedList<T>() }
+        val list = destination.getOrPut(key) { LinkedList() }
         list.add(element)
     }
     return destination

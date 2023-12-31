@@ -38,7 +38,7 @@ fun Sheet.fill8(bracket: BracketDto): Sheet = apply {
         if (i != 19)
             getRow(i).getCell(1).apply {
                 flatGraph[Node.Level.THREE]?.poll()?.participant?.let { participant ->
-                    setCellValue("${participant.lastName} ${participant.firstName} (${participant.team.name})")
+                    setCellValue("${participant.lastName} ${participant.firstName} (${participant.team})")
                 }
                 cellStyle = workbook.regularStyle
             }

@@ -1,9 +1,12 @@
 package ru.pkozlov.brackets.excel.core.service
 
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.jxls.common.Context
+import org.jxls.util.JxlsHelper
 import ru.pkozlov.brackets.excel.core.dto.BracketDto
-import ru.pkozlov.brackets.excel.core.service.fill.fill8
 import ru.pkozlov.brackets.excel.core.util.addSheet
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 class TemplateService(
     private val fileService: FileService
@@ -16,14 +19,22 @@ class TemplateService(
     fun process(brackets: List<BracketDto>): Unit = WorkbookFactory.create(XSSF).let { mainWorkbook ->
         brackets.forEach { bracket ->
             bracket.template.run(fileService::readData).let { template ->
-                WorkbookFactory.create(template)
-                    .apply {
-                        setSheetName(TEMPLATE_SHEET_INDEX, bracket.category.weightCategory.weightLimit.toString())
-                        getSheetAt(TEMPLATE_SHEET_INDEX)
-                            .fill8(bracket)
-                            .run(mainWorkbook::addSheet)
+                bracket.graph.flat(HashMap()) { it.level.name }.let { flatGraph ->
+                    ByteArrayOutputStream().use { outputStream ->
+                        Context().apply {
+                            putVar("tournamentName", bracket.tournamentName)
+                            putVar("birthYearRange", "${bracket.category.birthYearRange.start}-${bracket.category.birthYearRange.endInclusive}")
+                            putVar("weightCategory", bracket.category.weightCategory.weightLimit)
+                            putVar("graph", flatGraph)
+                        }.let { context -> JxlsHelper.getInstance().processTemplate(template, outputStream, context) }
+
+                        ByteArrayInputStream(outputStream.toByteArray()).use(WorkbookFactory::create).apply {
+                            setSheetName(TEMPLATE_SHEET_INDEX, bracket.category.weightCategory.weightLimit.toString())
+                            getSheetAt(TEMPLATE_SHEET_INDEX).run(mainWorkbook::addSheet)
+                            close()
+                        }
                     }
-                    .close()
+                }
             }
         }
         fileService.output().use { output ->

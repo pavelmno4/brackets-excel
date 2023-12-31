@@ -15,7 +15,7 @@ class BracketGenerationService {
         val bracketSize: Int = defineBracketSize(participants.size)
         val preLastLevelCapacity: Int = bracketSize - participants.size
 
-        val graph: Node = createBracket(bracketSize)
+        val graph: Node = createGraph(bracketSize)
 
         when (participants.size) {
             3 -> fillCircleGrid(graph, participants)
@@ -97,16 +97,16 @@ class BracketGenerationService {
             else -> throw TooLargeSizeException("Count of participants is $participantsSize. Max grid is 32.")
         }
 
-    private fun createBracket(bracketSize: Int): Node {
+    private fun createGraph(bracketSize: Int): Node {
         val deepLevel: Level = Level.valueOf(log2(bracketSize.toDouble()).toInt())
-        return createGraph(Level.ZERO, deepLevel)
+        return createNode(Level.ZERO, deepLevel)
     }
 
-    private fun createGraph(currentLevel: Level, deepLevel: Level): Node =
+    private fun createNode(currentLevel: Level, deepLevel: Level): Node =
         if (currentLevel == deepLevel) Node(level = currentLevel)
         else Node(
             level = currentLevel,
-            left = createGraph(currentLevel.next(), deepLevel),
-            right = createGraph(currentLevel.next(), deepLevel)
+            left = createNode(currentLevel.next(), deepLevel),
+            right = createNode(currentLevel.next(), deepLevel)
         )
 }

@@ -2,7 +2,8 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 val kodein_version = "7.19.0"
 val apache_poi_version = "5.2.5"
-val logback_version = "1.4.11"
+val jxls_version = "2.14.0"
+val logback_version = "1.4.12"
 
 plugins {
     kotlin("jvm") version "1.9.20"
@@ -25,6 +26,8 @@ dependencies {
     /** Excel */
     implementation("org.apache.poi:poi:$apache_poi_version")
     implementation("org.apache.poi:poi-ooxml:$apache_poi_version")
+    implementation("org.jxls:jxls:$jxls_version")
+    implementation("org.jxls:jxls-poi:$jxls_version")
 
     /** Desktop */
     implementation(compose.desktop.currentOs)

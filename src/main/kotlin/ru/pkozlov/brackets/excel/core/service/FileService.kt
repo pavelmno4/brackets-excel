@@ -7,7 +7,7 @@ import java.io.InputStream
 import java.io.OutputStream
 
 class FileService(
-    private val outputFilePath: String = "filled_template.xlsx"
+    private val outputFilePath: String
 ) {
     fun readData(template: Template): InputStream =
         FileService::class.java.getResourceAsStream(template.path) ?: throw FileNotFoundException()

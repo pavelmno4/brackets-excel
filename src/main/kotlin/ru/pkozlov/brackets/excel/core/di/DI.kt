@@ -9,13 +9,18 @@ import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 import ru.pkozlov.brackets.excel.core.config.TemplatesConfig
 import ru.pkozlov.brackets.excel.core.service.BracketGenerationService
+import ru.pkozlov.brackets.excel.core.service.FileService
 import ru.pkozlov.brackets.excel.core.service.TemplateDefinitionComponent
+import ru.pkozlov.brackets.excel.core.service.TemplateService
 
 @OptIn(ExperimentalSerializationApi::class)
 val di = DI {
     bindSingleton<TemplatesConfig> {
         ConfigFactory.parseResources("application.conf").getConfig("templates").run(Hocon::decodeFromConfig)
     }
+    bindSingleton<String>(tag = "output") { ConfigFactory.parseResources("application.conf").getString("output") }
+    bindSingleton { FileService(instance(tag = "output")) }
     bindSingleton { TemplateDefinitionComponent(instance()) }
     bindSingleton { BracketGenerationService(instance()) }
+    bindSingleton { TemplateService(instance()) }
 }

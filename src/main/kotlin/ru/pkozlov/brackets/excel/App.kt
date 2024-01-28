@@ -16,7 +16,6 @@ import ru.pkozlov.brackets.excel.core.dto.Category
 import ru.pkozlov.brackets.excel.core.dto.ParticipantDto
 import ru.pkozlov.brackets.excel.core.dto.WeightCategory
 import ru.pkozlov.brackets.excel.core.service.BracketGenerationService
-import ru.pkozlov.brackets.excel.core.service.FileService
 import ru.pkozlov.brackets.excel.core.service.TemplateDefinitionComponent
 import ru.pkozlov.brackets.excel.core.service.TemplateService
 import java.math.BigDecimal
@@ -147,7 +146,6 @@ fun main(): Unit {
         )
     )
 
-    val di = di
     val templateDefinitionComponent: TemplateDefinitionComponent by di.instance()
 
     val brackets: List<BracketDto> = listOf(
@@ -161,5 +159,6 @@ fun main(): Unit {
         )
     )
 
-    TemplateService(FileService()).process(brackets)
+    val templateService: TemplateService by di.instance()
+    templateService.process(brackets)
 }

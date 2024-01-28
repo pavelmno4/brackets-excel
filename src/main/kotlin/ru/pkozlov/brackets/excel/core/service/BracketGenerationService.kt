@@ -90,11 +90,10 @@ class BracketGenerationService {
         when {
             participantsSize <= 2 -> 2
             participantsSize == 3 -> 8
-            participantsSize <= 4 -> 4
+            participantsSize == 4 -> 4
             participantsSize <= 8 -> 8
             participantsSize <= 16 -> 16
-            participantsSize <= 32 -> 32
-            else -> throw TooLargeSizeException("Count of participants is $participantsSize. Max grid is 32.")
+            else -> throw TooLargeSizeException("Count of participants is $participantsSize. Max grid is 16.")
         }
 
     private fun createGraph(bracketSize: Int): Node {

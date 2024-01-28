@@ -1,12 +1,10 @@
 package ru.pkozlov.brackets.excel.core.service
 
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import org.jxls.common.Context
-import org.jxls.util.JxlsHelper
+import org.jxls.transform.poi.JxlsPoiTemplateFillerBuilder
 import ru.pkozlov.brackets.excel.core.dto.BracketDto
 import ru.pkozlov.brackets.excel.core.util.addSheet
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 
 class TemplateService(
     private val fileService: FileService
@@ -20,19 +18,22 @@ class TemplateService(
         brackets.forEach { bracket ->
             bracket.template.run(fileService::readData).let { template ->
                 bracket.graph.flat(HashMap()) { it.level.name }.let { flatGraph ->
-                    ByteArrayOutputStream().use { outputStream ->
-                        Context().apply {
-                            putVar("tournamentName", bracket.tournamentName)
-                            putVar("birthYearRange", "${bracket.category.birthYearRange.start}-${bracket.category.birthYearRange.endInclusive}")
-                            putVar("weightCategory", bracket.category.weightCategory.weightLimit)
-                            putVar("graph", flatGraph)
-                        }.let { context -> JxlsHelper.getInstance().processTemplate(template, outputStream, context) }
+                    HashMap<String, Any>().let { context ->
+                        context["tournamentName"] = bracket.tournamentName
+                        context["birthYearRange"] = "${bracket.category.birthYearRange.start}-${bracket.category.birthYearRange.endInclusive}"
+                        context["weightCategory"] = bracket.category.weightCategory.weightLimit
+                        context["graph"] = flatGraph
 
-                        ByteArrayInputStream(outputStream.toByteArray()).use(WorkbookFactory::create).apply {
-                            setSheetName(TEMPLATE_SHEET_INDEX, bracket.category.weightCategory.weightLimit.toString())
-                            getSheetAt(TEMPLATE_SHEET_INDEX).run(mainWorkbook::addSheet)
-                            close()
-                        }
+                        JxlsPoiTemplateFillerBuilder.newInstance()
+                            .withTemplate(template)
+                            .buildAndFill(context)
+                            .run(::ByteArrayInputStream)
+                            .use(WorkbookFactory::create)
+                            .apply {
+                                setSheetName(TEMPLATE_SHEET_INDEX, bracket.category.weightCategory.weightLimit.toString())
+                                getSheetAt(TEMPLATE_SHEET_INDEX).run(mainWorkbook::addSheet)
+                                close()
+                            }
                     }
                 }
             }

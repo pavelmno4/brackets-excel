@@ -1,13 +1,14 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
-val kodein_version = "7.19.0"
+val kodein_version = "7.21.1"
 val apache_poi_version = "5.2.5"
-val jxls_version = "2.14.0"
+val jxls_version = "3.0.0-beta1"
 val logback_version = "1.4.12"
 
 plugins {
-    kotlin("jvm") version "1.9.20"
-    id("org.jetbrains.compose") version "1.5.10"
+    kotlin("jvm") version "1.9.21"
+    kotlin("plugin.serialization") version "1.9.21"
+    id("org.jetbrains.compose") version "1.5.11"
 }
 
 group = "ru.pkozlov"
@@ -21,12 +22,11 @@ repositories {
 
 dependencies {
     /** DI */
-    implementation("org.kodein.di:kodein-di-jvm:$kodein_version")
+    implementation("org.kodein.di:kodein-di-framework-compose:$kodein_version")
 
     /** Excel */
     implementation("org.apache.poi:poi:$apache_poi_version")
     implementation("org.apache.poi:poi-ooxml:$apache_poi_version")
-    implementation("org.jxls:jxls:$jxls_version")
     implementation("org.jxls:jxls-poi:$jxls_version")
 
     /** Desktop */

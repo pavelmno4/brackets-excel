@@ -1,8 +1,7 @@
 package ru.pkozlov.brackets.excel.core.service
 
-import ru.pkozlov.brackets.excel.core.dto.Node
+import ru.pkozlov.brackets.excel.core.dto.*
 import ru.pkozlov.brackets.excel.core.dto.Node.Level
-import ru.pkozlov.brackets.excel.core.dto.ParticipantDto
 import ru.pkozlov.brackets.excel.core.exception.TooLargeSizeException
 import ru.pkozlov.brackets.excel.core.util.groupQueueBy
 import ru.pkozlov.brackets.excel.core.util.pollAndAddLast
@@ -10,22 +9,33 @@ import ru.pkozlov.brackets.excel.core.util.toQueue
 import java.util.*
 import kotlin.math.log2
 
-class BracketGenerationService {
-    fun generate(participants: Collection<ParticipantDto>): Node {
+class BracketGenerationService(
+    private val templateDefinitionComponent: TemplateDefinitionComponent
+) {
+    fun generate(
+        tournamentName: String,
+        category: Category,
+        participants: Collection<ParticipantDto>
+    ): BracketDto {
         val bracketSize: Int = defineBracketSize(participants.size)
         val preLastLevelCapacity: Int = bracketSize - participants.size
-
+        val template: Template = templateDefinitionComponent.define(participants.size)
         val graph: Node = createGraph(bracketSize)
 
         when (participants.size) {
             3 -> fillCircleGrid(graph, participants)
-            else -> fillOlimpicGrid(graph, preLastLevelCapacity, participants)
+            else -> fillOlympicGrid(graph, preLastLevelCapacity, participants)
         }
 
-        return graph
+        return BracketDto(
+            tournamentName = tournamentName,
+            category = category,
+            template = template,
+            graph = graph
+        )
     }
 
-    private fun fillOlimpicGrid(
+    private fun fillOlympicGrid(
         graph: Node,
         preLastLevelCapacity: Int,
         participants: Collection<ParticipantDto>

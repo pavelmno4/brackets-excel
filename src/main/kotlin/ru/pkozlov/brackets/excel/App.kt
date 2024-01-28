@@ -1,16 +1,28 @@
+package ru.pkozlov.brackets.excel
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import ru.pkozlov.brackets.excel.core.dto.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import org.kodein.di.instance
+import ru.pkozlov.brackets.excel.core.di.di
+import ru.pkozlov.brackets.excel.core.dto.BracketDto
+import ru.pkozlov.brackets.excel.core.dto.Category
+import ru.pkozlov.brackets.excel.core.dto.ParticipantDto
+import ru.pkozlov.brackets.excel.core.dto.WeightCategory
 import ru.pkozlov.brackets.excel.core.service.BracketGenerationService
 import ru.pkozlov.brackets.excel.core.service.FileService
+import ru.pkozlov.brackets.excel.core.service.TemplateDefinitionComponent
 import ru.pkozlov.brackets.excel.core.service.TemplateService
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Year
-import java.util.*
+import java.util.Calendar
 
 @Preview
 @Composable
@@ -135,8 +147,11 @@ fun main(): Unit {
         )
     )
 
+    val di = di
+    val templateDefinitionComponent: TemplateDefinitionComponent by di.instance()
+
     val brackets: List<BracketDto> = listOf(
-        BracketGenerationService().generate(
+        BracketGenerationService(templateDefinitionComponent).generate(
             tournamentName = "Первенство Московской области по Панкратиону",
             category = Category(
                 birthYearRange = Year.of(2009)..Year.of(2010),

@@ -3,7 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 val kodein_version = "7.21.1"
 val apache_poi_version = "5.2.5"
 val jxls_version = "3.0.0-beta1"
-val logback_version = "1.4.12"
+val log4j_version = "2.22.1"
 
 plugins {
     kotlin("jvm") version "1.9.21"
@@ -32,10 +32,14 @@ dependencies {
     /** Desktop */
     implementation(compose.desktop.currentOs)
 
+    /** Config serialization */
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.2")
+
     /** Logging */
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("commons-logging:commons-logging:1.3.0")
+    implementation("org.apache.logging.log4j:log4j-core:$log4j_version")
 }
 
 java {

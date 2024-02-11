@@ -3,6 +3,7 @@ package ru.pkozlov.brackets.excel.core.service
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jxls.transform.poi.JxlsPoiTemplateFillerBuilder
 import ru.pkozlov.brackets.excel.core.dto.BracketDto
+import ru.pkozlov.brackets.excel.core.dto.Category
 import ru.pkozlov.brackets.excel.core.util.addSheet
 import java.io.ByteArrayInputStream
 
@@ -10,8 +11,8 @@ class TemplateService(
     private val fileService: FileService
 ) {
     companion object Companion {
-        const val XSSF = true
-        const val TEMPLATE_SHEET_INDEX = 0
+        private const val XSSF = true
+        private const val TEMPLATE_SHEET_INDEX = 0
     }
 
     fun process(brackets: List<BracketDto>): Unit = WorkbookFactory.create(XSSF).let { mainWorkbook ->
@@ -38,9 +39,12 @@ class TemplateService(
                 }
             }
         }
-        fileService.output().use { output ->
+        brackets.firstOrNull()?.category?.outputFileName?.run(fileService::output).use { output ->
             mainWorkbook.write(output)
             mainWorkbook.close()
         }
     }
+
+    private val Category.outputFileName: String
+        get() = birthYearRange.run { "$start-$endInclusive.xlsx" }
 }

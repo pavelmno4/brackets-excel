@@ -46,6 +46,7 @@ fun ApplicationScope.BracketsExcel() {
                     ElementsUnderlayer {
                         Title()
                         FilePicker(files)
+                        Start(files)
                     }
                 }
             }

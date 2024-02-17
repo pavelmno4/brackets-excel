@@ -32,6 +32,9 @@ dependencies {
     /** Desktop */
     implementation(compose.desktop.currentOs)
 
+    /** UI */
+    implementation("androidx.graphics:graphics-shapes:1.0.0-alpha04")
+
     /** Config serialization */
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.6.2")
 

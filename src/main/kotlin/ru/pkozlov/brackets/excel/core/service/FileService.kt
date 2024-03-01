@@ -22,5 +22,9 @@ class FileService(
     fun readData(template: Template): InputStream =
         FileService::class.java.getResourceAsStream(template.path) ?: throw FileNotFoundException()
 
-    fun output(fileName: String): OutputStream = FileOutputStream(fileName)
+    fun output(fileName: String): OutputStream =
+        Path("${userHomePath}${defaultOutputPath}").takeIf { it.exists() }
+            ?.run { FileOutputStream("${userHomePath}${defaultOutputPath}/${fileName}") }
+            ?: Path("${userHomePath}${defaultOutputPath}").createDirectory()
+                .run { FileOutputStream("${userHomePath}${defaultOutputPath}/${fileName}") }
 }

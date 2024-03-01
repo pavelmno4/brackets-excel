@@ -6,8 +6,17 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.file.Path
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.createDirectory
+import kotlin.io.path.exists
 
-class FileService {
+class FileService(
+    private val defaultOutputPath: String = "/BracketCreator"
+) {
+    private val userHomePath: Path = Path(System.getProperty("user.home"))
+
     fun readData(paths: Collection<String>): List<File> = paths.map(::File)
 
     fun readData(template: Template): InputStream =

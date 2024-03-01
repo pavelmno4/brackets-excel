@@ -53,11 +53,11 @@ java {
 
 compose.desktop {
     application {
-        mainClass = "AppKt"
+        mainClass = "ru.pkozlov.brackets.excel.AppKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = rootProject.name
+            packageName = "Brackets Excel"
             packageVersion = version as String
         }
     }

@@ -3,6 +3,7 @@ package ru.pkozlov.brackets.excel.core.service
 import ru.pkozlov.brackets.excel.core.dto.*
 import ru.pkozlov.brackets.excel.core.dto.Node.Level
 import ru.pkozlov.brackets.excel.core.exception.TooLargeSizeException
+import ru.pkozlov.brackets.excel.core.util.emptyBracketDto
 import ru.pkozlov.brackets.excel.core.util.groupQueueBy
 import ru.pkozlov.brackets.excel.core.util.pollAndAddLast
 import ru.pkozlov.brackets.excel.core.util.toQueue
@@ -17,6 +18,8 @@ class BracketGenerationService(
         category: Category,
         participants: Collection<ParticipantDto>
     ): BracketDto {
+        if (participants.isEmpty()) return emptyBracketDto(tournamentName = tournamentName, category = category)
+
         val bracketSize: Int = defineBracketSize(participants.size)
         val preLastLevelCapacity: Int = bracketSize - participants.size
         val template: Template = templateDefinitionComponent.define(participants.size)

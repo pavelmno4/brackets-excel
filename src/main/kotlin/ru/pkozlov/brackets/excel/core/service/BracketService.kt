@@ -38,9 +38,8 @@ class BracketService(
     private fun Sheet.extractParticipants(): List<ParticipantDto> = mapIndexedNotNull { index, row ->
         takeIf { index > 5 && row.getCell(1)?.stringCellValue?.isNotBlank() ?: false }?.run {
             ParticipantDto(
-                lastName = row.getCell(1).stringCellValue,
-                firstName = row.getCell(3).stringCellValue,
-                team = row.getCell(8).stringCellValue
+                fullName = row.getCell(1).stringCellValue,
+                team = row.getCell(6).stringCellValue
             )
         }
     }

@@ -39,9 +39,6 @@ class BracketService(
             ParticipantDto(
                 lastName = row.getCell(1).stringCellValue,
                 firstName = row.getCell(3).stringCellValue,
-                birthDate = row.getCell(5).localDateTimeCellValue.toLocalDate(),
-                weight = row.getCell(7).stringCellValue.run(::BigDecimal),
-                category = category,
                 team = row.getCell(8).stringCellValue
             )
         }

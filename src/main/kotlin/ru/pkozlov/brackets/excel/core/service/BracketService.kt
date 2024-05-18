@@ -36,7 +36,11 @@ class BracketService(
         )
 
     private fun Sheet.extractParticipants(): List<ParticipantDto> = mapIndexedNotNull { index, row ->
-        takeIf { index > 5 && row.getCell(1)?.stringCellValue?.isNotBlank() ?: false }?.run {
+        takeIf {
+            index > 5 &&
+                    (row.getCell(0)?.stringCellValue?.isNotBlank() ?: false) &&
+                    (row.getCell(1)?.stringCellValue?.isNotBlank() ?: false)
+        }?.run {
             ParticipantDto(
                 fullName = row.getCell(1).stringCellValue,
                 team = row.getCell(6).stringCellValue
